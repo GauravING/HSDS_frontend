@@ -1,25 +1,35 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from './contexts/ThemeContext';
 
-import Landing from './components/Landing';
-import Dashboard from './components/Dashboard';
-import LiveDetection from './components/LiveDetection';
-import UploadDetection from './components/UploadDetection';
-import LoginForm from './components/LoginForm';
-import SignupForm from './components/SignupForm'; // ✅ Added
+// Lazy load components for better performance
+const Landing = lazy(() => import('./components/ResponsiveLandingEnhanced'));
+const Dashboard = lazy(() => import('./components/AdvancedDashboard'));
+const LiveDetection = lazy(() => import('./components/EnhancedLiveDetection'));
+const UploadDetection = lazy(() => import('./components/EnhancedUploadDetection'));
+const RegisterForm = lazy(() => import('./components/EnhancedSignupForm'));
+const LoginForm = lazy(() => import('./components/EnhancedStylishLoginForm'));
+const ForgotPassword = lazy(() => import('./components/ForgotPassword'));
+const ResetPassword = lazy(() => import('./components/ResetPassword'));
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/signup" element={<SignupForm />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/live" element={<LiveDetection />} />
-        <Route path="/upload" element={<UploadDetection />} />
-      </Routes>
-    </Router>
+    <ThemeProvider>
+      <Router>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/create-account" element={<RegisterForm />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/live" element={<LiveDetection />} />
+            <Route path="/upload" element={<UploadDetection />} />
+          </Routes>
+        </Suspense>
+      </Router>
+    </ThemeProvider>
   );
 }
 
